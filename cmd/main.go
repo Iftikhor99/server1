@@ -10,7 +10,7 @@ import (
 	"os"
 	"strconv"
 //	"strings"
-	"server/pkg/server"
+	"github.com/Iftikhor99/server/pkg/server"
 )
 
 func main() {
