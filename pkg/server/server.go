@@ -68,8 +68,12 @@ func (s *Server) Start() error {
 			log.Print(err)
 			continue
 		}
-		wg.Add(len(s.handlers))
-		go s.handle(conn, &wg)
+		
+		for i := 0; i < len(s.handlers); i++ {
+			wg.Add(1)
+			go s.handle(conn, &wg)
+		}
+		
 		// if err != nil {
 		// 	log.Print(err)
 		// 	continue
@@ -138,8 +142,9 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if path == "/" {
 		s.mu.RLock()
 		handler := s.handlers["/"]
-		handler(conn)
+		
 		s.mu.RUnlock()
+		handler(conn)
 		
 		wg.Done()
 	// 	//log.Print(npm)
@@ -164,9 +169,9 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if path == "/about" {
 		s.mu.RLock()
 		handler := s.handlers["/about"]
-		handler(conn)
-		s.mu.RUnlock()
 		
+		s.mu.RUnlock()
+		handler(conn)
 		wg.Done()
 	}
 
