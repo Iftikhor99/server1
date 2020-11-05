@@ -43,12 +43,14 @@ func (s *Server) Register(path string, handler HandlerFunc) {
 //Start for
 func (s *Server) Start() error {
 	// TODO: start server on host & port
+	var wg sync.WaitGroup
 	listener, err := net.Listen("tcp", s.addr)
 	if err != nil {
 		log.Print(err)
 		return err
 	}
 	defer func() {
+		wg.Wait()
 		if cerr := listener.Close(); cerr != nil {
 
 			if err == nil {
@@ -67,7 +69,7 @@ func (s *Server) Start() error {
 			continue
 		}
 		
-		go s.handle(conn)
+		go s.handle(conn, &wg)
 		// if err != nil {
 		// 	log.Print(err)
 		// 	continue
@@ -81,9 +83,12 @@ func (s *Server) Start() error {
 
 }
 
-func (s *Server) handle(conn net.Conn) {
+func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	var err error
 	//mu := s.mu
+//	wg := sync.WaitGroup{}
+	defer wg.Done()
+	wg.Add(1)
 	defer func() {
 		if cerr := conn.Close(); cerr != nil {
 			if err == nil {
@@ -160,5 +165,5 @@ func (s *Server) handle(conn net.Conn) {
 		handler(conn)
 	}
 
-	
+	//wg.Wait()
 }
