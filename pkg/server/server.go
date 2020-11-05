@@ -68,7 +68,7 @@ func (s *Server) Start() error {
 			log.Print(err)
 			continue
 		}
-		
+		wg.Add(len(s.handlers))
 		go s.handle(conn, &wg)
 		// if err != nil {
 		// 	log.Print(err)
@@ -87,9 +87,10 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	var err error
 	//mu := s.mu
 //	wg := sync.WaitGroup{}
-	defer wg.Done()
-	wg.Add(1)
+//	defer wg.Done()
+	//wg.Add(1)
 	defer func() {
+		wg.Done()
 		if cerr := conn.Close(); cerr != nil {
 			if err == nil {
 				err = cerr
