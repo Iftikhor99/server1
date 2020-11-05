@@ -90,7 +90,7 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 //	defer wg.Done()
 	//wg.Add(1)
 	defer func() {
-		wg.Done()
+//		wg.Done()
 		if cerr := conn.Close(); cerr != nil {
 			if err == nil {
 				err = cerr
@@ -140,6 +140,7 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 		handler := s.handlers["/"]
 		s.mu.RUnlock()
 		handler(conn)
+		wg.Done()
 	// 	//log.Print(npm)
 	// 	body := "Ok!"
 	// //	body, err := ioutil.ReadFile("static/index.html")
@@ -164,6 +165,7 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 		handler := s.handlers["/about"]
 		s.mu.RUnlock()
 		handler(conn)
+		wg.Done()
 	}
 
 	//wg.Wait()
