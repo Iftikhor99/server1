@@ -45,11 +45,15 @@ func (s *Server) Register(path string, handler HandlerFunc) {
 func (s *Server) Start() error {
 	// TODO: start server on host & port
 	//var wg sync.WaitGroup
+	log.Println(len(s.handlers))
 	
 	listener, err := net.Listen("tcp", s.addr)
 	if err != nil {
 		log.Print(err)
 		return err
+	}
+	if len(s.handlers) == 0 {
+		listener.Close()
 	}
 	defer func() {
 	//	wg.Wait()
