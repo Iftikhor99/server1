@@ -120,6 +120,7 @@ func (s *Server) handle(conn net.Conn) {
 	if n == 0 || err == io.EOF {
 		log.Printf("%s", buf[:n])
 		log.Print(err)
+		conn.Close()
 		break
 	}
 	// if err != nil {
