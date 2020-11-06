@@ -72,7 +72,7 @@ func (s *Server) Start() error {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Print(err)
-			conn.Close()
+		//	conn.Close()
 			continue
 		}
 
