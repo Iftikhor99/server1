@@ -69,6 +69,10 @@ func (s *Server) Start() error {
 			log.Print(err)
 			continue
 		}
+
+		if len(s.handlers) == 0{
+			continue
+		}
 		
 //		for i := 0; i < len(s.handlers); i++ {
 			wg.Add(1)
