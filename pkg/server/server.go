@@ -1,6 +1,7 @@
 package server
 
 import (
+	"runtime"
 	"bytes"
 	"io"
 	"strings"
@@ -71,7 +72,9 @@ func (s *Server) Start() error {
 		
 	//	for i := 0; i < len(s.handlers); i++ {
 			wg.Add(1)
-			go s.handle(conn, &wg)
+			go s.handle(conn)
+			wg.Done()
+			log.Println("number of gorutines: ", runtime.NumGoroutine())
 	//	}
 		
 		// if err != nil {
@@ -83,11 +86,11 @@ func (s *Server) Start() error {
 
 	
 
-//	return nil
+	return nil
 
 }
 
-func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
+func (s *Server) handle(conn net.Conn) {
 	var err error
 	//mu := s.mu
 //	wg := sync.WaitGroup{}
@@ -146,7 +149,7 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 		s.mu.RUnlock()
 		handler(conn)
 		
-		wg.Done()
+		//wg.Done()
 	// 	//log.Print(npm)
 	// 	body := "Ok!"
 	// //	body, err := ioutil.ReadFile("static/index.html")
@@ -172,7 +175,7 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 		
 		s.mu.RUnlock()
 		handler(conn)
-		wg.Done()
+		//wg.Done()
 	}
 
 	//wg.Wait()
