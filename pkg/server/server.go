@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"io"
 	"strings"
-//	"strconv"
+	"strconv"
 //	"fmt"
 	"log"
 	"net"
@@ -150,36 +150,34 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 
 	if path == "/" {
 		s.mu.RLock()
-		handler := s.handlers["/"]
-		handler(conn)
+//		handler := s.handlers["/"]
+//		handler(conn)
 		s.mu.RUnlock()
 		
 		
 		wg.Done()
 	}
-	// 	//log.Print(npm)
-	// 	body := "Ok!"
-	// //	body, err := ioutil.ReadFile("static/index.html")
-	// 	if err != nil {
-	// 		return fmt.Errorf("can't read index.html: %w", err)
-	// 	}
-	// 	_, err = conn.Write([]byte(
-	// 		"HTTP/1.1 200 OK\r\n" +
-	// 			"Conect-Length: " + strconv.Itoa(len(body)) + "\r\n" +
-	// 			"Content-Type: text/html	\r\n" +
-	// 			"Connection: close\r\n" +
-	// 			"\r\n" +
-	// 			string(body),
-	// 	))
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	//}
+		//log.Print(npm)
+		body := "Ok!"
+	//	body, err := ioutil.ReadFile("static/index.html")
+		
+		_, err = conn.Write([]byte(
+			"HTTP/1.1 200 OK\r\n" +
+				"Conect-Length: " + strconv.Itoa(len(body)) + "\r\n" +
+				"Content-Type: text/html	\r\n" +
+				"Connection: close\r\n" +
+				"\r\n" +
+				string(body),
+		))
+		if err != nil {
+			log.Print(err)
+		}
+	
 	
 	if path == "/about" {
 		s.mu.RLock()
-		handler := s.handlers["/about"]
-		handler(conn)
+//		handler := s.handlers["/about"]
+//		handler(conn)
 		s.mu.RUnlock()
 		
 		wg.Done()
