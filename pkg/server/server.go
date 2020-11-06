@@ -72,7 +72,7 @@ func (s *Server) Start() error {
 		
 	//	for i := 0; i < len(s.handlers); i++ {
 			//wg.Add(1)
-			go s.handle(conn)
+			s.handle(conn)
 		
 			log.Println("number of gorutines: ", runtime.NumGoroutine())
 			
