@@ -44,10 +44,8 @@ func (s *Server) Register(path string, handler HandlerFunc) {
 //Start for
 func (s *Server) Start() error {
 	// TODO: start server on host & port
-	var wg sync.WaitGroup
-	if len(s.handlers) == 0{
-		return nil
-	}
+	//var wg sync.WaitGroup
+	
 	listener, err := net.Listen("tcp", s.addr)
 	if err != nil {
 		log.Print(err)
@@ -70,14 +68,15 @@ func (s *Server) Start() error {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Print(err)
+			conn.Close()
 			continue
 		}
 
 		
 		
 //		for i := 0; i < len(s.handlers); i++ {
-			wg.Add(1)
-			go s.handle(conn, &wg)
+			
+			go s.handle(conn)
 		//	wg.Done()
 			log.Println("number of gorutines: ", runtime.NumGoroutine())
 			
@@ -90,13 +89,13 @@ func (s *Server) Start() error {
 
 	}
 
-	wg.Wait()
+//	wg.Wait()
 
 	return nil
 
 }
 
-func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
+func (s *Server) handle(conn net.Conn) {
 	var err error
 	//var wg sync.WaitGroup
 	//wg.Add(1)
@@ -114,17 +113,18 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 			log.Print(err)
 		}
 	}()
-
+	for {
 	buf := make([]byte, 4096)
 
 	n, err := conn.Read(buf)
-	if err == io.EOF {
+	if n == 0 || err == io.EOF {
 		log.Printf("%s", buf[:n])
 		log.Print(err)
+		break
 	}
-	if err != nil {
-		log.Print(err)
-	}
+	// if err != nil {
+	// 	log.Print(err)
+	// }
 	log.Printf("%s", buf[:n])
 
 	data := buf[:n]
@@ -149,18 +149,18 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if version != "HTTP/1.1" {
 
 	}
-	if path == "/" {
+	// if path == "/" {
 
-	}
+	// }
 
 	if path == "/" {
 		s.mu.RLock()
 //		handler := s.handlers["/"]
-//		handler(conn)
+//		
 		s.mu.RUnlock()
+//		handler(conn)
 		
-		
-		wg.Done()
+	//	wg.Done()
 	}
 		//log.Print(npm)
 		body := "Ok!"
@@ -184,9 +184,9 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 //		handler := s.handlers["/about"]
 //		handler(conn)
 		s.mu.RUnlock()
-		
-		wg.Done()
+//		handler(conn)
+	//	wg.Done()
 	}
-
-	wg.Wait()
+	}
+//	wg.Wait()
 }
