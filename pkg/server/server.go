@@ -151,9 +151,9 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if path == "/" {
 		s.mu.RLock()
 		handler := s.handlers["/"]
-		
-		s.mu.RUnlock()
 		handler(conn)
+		s.mu.RUnlock()
+		
 		
 		wg.Done()
 	}
@@ -179,9 +179,9 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if path == "/about" {
 		s.mu.RLock()
 		handler := s.handlers["/about"]
-		
-		s.mu.RUnlock()
 		handler(conn)
+		s.mu.RUnlock()
+		
 		wg.Done()
 	}
 
