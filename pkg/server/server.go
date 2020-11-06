@@ -69,10 +69,10 @@ func (s *Server) Start() error {
 			continue
 		}
 		
-		for i := 0; i < len(s.handlers); i++ {
+	//	for i := 0; i < len(s.handlers); i++ {
 			wg.Add(1)
 			go s.handle(conn, &wg)
-		}
+	//	}
 		
 		// if err != nil {
 		// 	log.Print(err)
