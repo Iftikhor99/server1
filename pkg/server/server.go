@@ -45,6 +45,9 @@ func (s *Server) Register(path string, handler HandlerFunc) {
 func (s *Server) Start() error {
 	// TODO: start server on host & port
 	var wg sync.WaitGroup
+	if len(s.handlers) == 0{
+		return nil
+	}
 	listener, err := net.Listen("tcp", s.addr)
 	if err != nil {
 		log.Print(err)
@@ -70,9 +73,7 @@ func (s *Server) Start() error {
 			continue
 		}
 
-		if len(s.handlers) == 0{
-			continue
-		}
+		
 		
 //		for i := 0; i < len(s.handlers); i++ {
 			wg.Add(1)
