@@ -44,14 +44,14 @@ func (s *Server) Register(path string, handler HandlerFunc) {
 //Start for
 func (s *Server) Start() error {
 	// TODO: start server on host & port
-	var wg sync.WaitGroup
+	//var wg sync.WaitGroup
 	listener, err := net.Listen("tcp", s.addr)
 	if err != nil {
 		log.Print(err)
 		return err
 	}
 	defer func() {
-		wg.Wait()
+	//	wg.Wait()
 		if cerr := listener.Close(); cerr != nil {
 
 			if err == nil {
@@ -71,10 +71,11 @@ func (s *Server) Start() error {
 		}
 		
 	//	for i := 0; i < len(s.handlers); i++ {
-			wg.Add(1)
+			//wg.Add(1)
 			go s.handle(conn)
-			wg.Done()
+		
 			log.Println("number of gorutines: ", runtime.NumGoroutine())
+			
 	//	}
 		
 		// if err != nil {
@@ -92,6 +93,8 @@ func (s *Server) Start() error {
 
 func (s *Server) handle(conn net.Conn) {
 	var err error
+	var wg sync.WaitGroup
+	wg.Add(1)
 	//mu := s.mu
 //	wg := sync.WaitGroup{}
 //	defer wg.Done()
@@ -149,7 +152,7 @@ func (s *Server) handle(conn net.Conn) {
 		s.mu.RUnlock()
 		handler(conn)
 		
-		//wg.Done()
+		wg.Done()
 	// 	//log.Print(npm)
 	// 	body := "Ok!"
 	// //	body, err := ioutil.ReadFile("static/index.html")
@@ -175,8 +178,8 @@ func (s *Server) handle(conn net.Conn) {
 		
 		s.mu.RUnlock()
 		handler(conn)
-		//wg.Done()
+		wg.Done()
 	}
 
-	//wg.Wait()
+	wg.Wait()
 }
