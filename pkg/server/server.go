@@ -1,7 +1,6 @@
 package server
 
 import (
-	"runtime"
 	"bytes"
 	"io"
 	"strings"
@@ -44,14 +43,12 @@ func (s *Server) Register(path string, handler HandlerFunc) {
 //Start for
 func (s *Server) Start() error {
 	// TODO: start server on host & port
-	var wg sync.WaitGroup
 	listener, err := net.Listen("tcp", s.addr)
 	if err != nil {
 		log.Print(err)
 		return err
 	}
 	defer func() {
-		wg.Wait()
 		if cerr := listener.Close(); cerr != nil {
 
 			if err == nil {
@@ -67,18 +64,10 @@ func (s *Server) Start() error {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Print(err)
-			conn.Close()
 			continue
 		}
 		
-//		for i := 0; i < len(s.handlers); i++ {
-			wg.Add(1)
-			go s.handle(conn, &wg)
-		//	wg.Done()
-			log.Println("number of gorutines: ", runtime.NumGoroutine())
-			
-//		}
-		
+		go s.handle(conn)
 		// if err != nil {
 		// 	log.Print(err)
 		// 	continue
@@ -88,20 +77,14 @@ func (s *Server) Start() error {
 
 	
 
-	return nil
+//	return nil
 
 }
 
-func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
+func (s *Server) handle(conn net.Conn) {
 	var err error
-	//var wg sync.WaitGroup
-	//wg.Add(1)
 	//mu := s.mu
-//	wg := sync.WaitGroup{}
-//	defer wg.Done()
-	//wg.Add(1)
 	defer func() {
-	//	wg.Done()
 		if cerr := conn.Close(); cerr != nil {
 			if err == nil {
 				err = cerr
@@ -149,11 +132,8 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if path == "/" {
 		s.mu.RLock()
 		handler := s.handlers["/"]
-		
 		s.mu.RUnlock()
-	//	handler(conn)
-		log.Print(handler)
-		wg.Done()
+		handler(conn)
 	// 	//log.Print(npm)
 	// 	body := "Ok!"
 	// //	body, err := ioutil.ReadFile("static/index.html")
@@ -176,12 +156,9 @@ func (s *Server) handle(conn net.Conn, wg *sync.WaitGroup) {
 	if path == "/about" {
 		s.mu.RLock()
 		handler := s.handlers["/about"]
-		
 		s.mu.RUnlock()
-		//handler(conn)
-		log.Print(handler)
-		wg.Done()
+		handler(conn)
 	}
 
-	wg.Wait()
+	
 }
