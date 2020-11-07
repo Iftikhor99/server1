@@ -129,12 +129,18 @@ func (s *Server) handle(conn net.Conn) {
 
 	}
 
+	
+
 	if path == "/" {
 		s.mu.RLock()
-		handler := s.handlers["/"]
+		handler, ok := s.handlers["/"]
+		//handler := s.handlers["/"]
 		s.mu.RUnlock()
+		if ok == true {
+			handler(conn)
+		}
 	//	handler(conn)
-	log.Print(handler)
+//	log.Print(handler, ok)
 	// 	body := "Ok!"
 	// //	body, err := ioutil.ReadFile("static/index.html")
 	// 	if err != nil {
@@ -155,10 +161,14 @@ func (s *Server) handle(conn net.Conn) {
 	
 	if path == "/about" {
 		s.mu.RLock()
-		handler := s.handlers["/about"]
+		handler, ok := s.handlers["/about"]
+		
 		s.mu.RUnlock()
+		if ok == true {
+			handler(conn)	
+		}
 		//handler(conn)
-		log.Print(handler)
+	//	log.Print(handler)
 	}
 
 	
