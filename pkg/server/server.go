@@ -53,6 +53,8 @@ func (s *Server) Start() error {
 	}
 	if len(s.handlers) == 0 {
 		listener.Close()
+		log.Print("if no handlerrrrrrrrrrrrr")
+		return err
 	}
 	defer func() {
 		//	wg.Wait()
