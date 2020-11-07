@@ -139,7 +139,8 @@ func (s *Server) handle(conn net.Conn) {
 		if ok == true {
 			handler(conn)
 		}
-	} else if path == "/about" {
+	} 
+	if path == "/about" {
 		s.mu.RLock()
 		handler, ok := s.handlers["/about"]
 		
@@ -149,9 +150,13 @@ func (s *Server) handle(conn net.Conn) {
 		}
 		//handler(conn)
 	//	log.Print(handler)
-	} else {
-		//conn.Close()
-		return
+	} 
+	s.mu.RLock()
+		handler, ok := s.handlers["/secret"]
+		
+		s.mu.RUnlock()
+		if ok == true {
+			handler(conn)	
 	}
 	//	handler(conn)
 //	log.Print(handler, ok)
