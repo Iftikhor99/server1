@@ -114,7 +114,7 @@ func (s *Server) handle(conn net.Conn) {
 			log.Print(err)
 		}
 	}()
-	for {
+//	for {
 		buf := make([]byte, 4096)
 
 		n, err := conn.Read(buf)
@@ -189,6 +189,6 @@ func (s *Server) handle(conn net.Conn) {
 			//		handler(conn)
 			//	wg.Done()
 		}
-	}
+//	}
 	//	wg.Wait()
 }
