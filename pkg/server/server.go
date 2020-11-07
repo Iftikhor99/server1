@@ -131,33 +131,36 @@ func (s *Server) handle(conn net.Conn) {
 
 	
 
-	if path == "/" {
+	//if path == "/" {
 		s.mu.RLock()
-		handler, ok := s.handlers["/"]
+		handler, ok := s.handlers[path]
 		//handler := s.handlers["/"]
 		s.mu.RUnlock()
 		if ok == true {
 			handler(conn)
+		} else {
+//			conn.Close()
+			return
 		}
-	} 
-	if path == "/about" {
-		s.mu.RLock()
-		handler, ok := s.handlers["/about"]
+	//} 
+	// if path == "/about" {
+	// 	s.mu.RLock()
+	// 	handler, ok := s.handlers["/about"]
 		
-		s.mu.RUnlock()
-		if ok == true {
-			handler(conn)	
-		}
-		//handler(conn)
-	//	log.Print(handler)
-	} 
-	s.mu.RLock()
-		handler, ok := s.handlers["/secret"]
+	// 	s.mu.RUnlock()
+	// 	if ok == true {
+	// 		handler(conn)	
+	// 	}
+	// 	//handler(conn)
+	// //	log.Print(handler)
+	// } 
+	// s.mu.RLock()
+	// 	handler, ok := s.handlers["/secret"]
 		
-		s.mu.RUnlock()
-		if ok == true {
-			handler(conn)	
-	}
+	// 	s.mu.RUnlock()
+	// 	if ok == true {
+	// 		handler(conn)	
+	// }
 	//	handler(conn)
 //	log.Print(handler, ok)
 	// 	body := "Ok!"
