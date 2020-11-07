@@ -51,9 +51,9 @@ func (s *Server) Start() error {
 		log.Print(err)
 		return err
 	}
-	// if len(s.handlers) == 0 {
-	// 	listener.Close()
-	// }
+	if len(s.handlers) == 0 {
+		listener.Close()
+	}
 	defer func() {
 		//	wg.Wait()
 		if cerr := listener.Close(); cerr != nil {
@@ -114,7 +114,7 @@ func (s *Server) handle(conn net.Conn) {
 			log.Print(err)
 		}
 	}()
-//	for {
+	for {
 		buf := make([]byte, 4096)
 
 		n, err := conn.Read(buf)
@@ -189,6 +189,6 @@ func (s *Server) handle(conn net.Conn) {
 			//		handler(conn)
 			//	wg.Done()
 		}
-//	}
+	}
 	//	wg.Wait()
 }
