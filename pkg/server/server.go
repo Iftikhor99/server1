@@ -133,8 +133,8 @@ func (s *Server) handle(conn net.Conn) {
 		s.mu.RLock()
 		handler := s.handlers["/"]
 		s.mu.RUnlock()
-		handler(conn)
-	// 	//log.Print(npm)
+	//	handler(conn)
+	log.Print(handler)
 	// 	body := "Ok!"
 	// //	body, err := ioutil.ReadFile("static/index.html")
 	// 	if err != nil {
@@ -157,7 +157,8 @@ func (s *Server) handle(conn net.Conn) {
 		s.mu.RLock()
 		handler := s.handlers["/about"]
 		s.mu.RUnlock()
-		handler(conn)
+		//handler(conn)
+		log.Print(handler)
 	}
 
 	
