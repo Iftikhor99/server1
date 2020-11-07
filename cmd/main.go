@@ -59,7 +59,17 @@ func execute(host string, port string) (err error) {
 		}
 	})
 
-	return srv.Start()
+	errS := srv.Start()
+	// log.Print("We now here")
+	// conn, err := net.Dial("tcp", "127.0.0.1:9999") 
+    // if err != nil { 
+    //     log.Println(err) 
+        
+    // } 
+    // defer conn.Close() 
+
+	return errS
+
 
 }
 

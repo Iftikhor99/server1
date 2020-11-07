@@ -53,6 +53,13 @@ func BenchmarkSerever(b *testing.B) {
 
 	errN := srv.Start()
 
+	conn, err := net.Dial("tcp", net.JoinHostPort(host, port)) 
+    if err != nil { 
+        log.Println(err) 
+        
+    } 
+    defer conn.Close() 
+
 	if errN != nil {
 		log.Print(errN)
 	}
