@@ -25,7 +25,7 @@ func main() {
 }
 
 func execute(host string, port string) (err error) {
-
+//test	
 	srv := server.NewServer(net.JoinHostPort(host, port))
 
 	srv.Register("/payments", func(req *server.Request) {
