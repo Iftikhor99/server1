@@ -1,0 +1,4 @@
+###
+
+GET http://localhost:9999/payments?id=1 HTTP/1.1
+

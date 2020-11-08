@@ -9,11 +9,11 @@ import (
 	"log"
 	"net"
 	"sync"
-	//“sync”
+	"net/url"
 )
 
 //HandlerFunc for
-type HandlerFunc func(conn net.Conn)
+type HandlerFunc func(req *Request)
 
 //Server for
 type Server struct {
@@ -25,6 +25,12 @@ type Server struct {
 }
 
 
+//Request for
+type Request struct {
+	Conn net.Conn
+	QueryParams url.Values
+}
+
 //NewServer for
 func NewServer(addr string) *Server {
 	return &Server{addr: addr, handlers: make(map[string]HandlerFunc)}
@@ -35,8 +41,8 @@ func NewServer(addr string) *Server {
 func (s *Server) Register(path string, handler HandlerFunc) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.handlers[path] = handler
 
+	s.handlers[path] = handler
 }
 
 
@@ -129,15 +135,26 @@ func (s *Server) handle(conn net.Conn) {
 
 	}
 
-	
+	uri, err := url.ParseRequestURI(path)
 
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	log.Print(uri.Path)
+	log.Print(uri.Query())
+	
+	newRequest := &Request{Conn: conn, QueryParams: uri.Query()}
+	
 	//if path == "/" {
 		s.mu.RLock()
-		handler, ok := s.handlers[path]
+		handler, ok := s.handlers[uri.Path]
 		//handler := s.handlers["/"]
 		s.mu.RUnlock()
 		if ok == true {
-			handler(conn)
+			log.Print("Ok printed ", handler)
+			handler(newRequest)
 		} else {
 //			conn.Close()
 			return
